@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>เชื่อมต่อ TikTok สำเร็จ — IAM NEWS AutoPost</title>
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; max-width: 680px; margin: 40px auto; padding: 0 20px; color: #1e293b; }
+    .box { border: 1px solid #cbd5e1; border-radius: 14px; padding: 24px; background: #f8fafc; }
+    h1 { color: #0f172a; margin-top: 0; font-size: 1.4rem; }
+    .cmd { background: #0f172a; color: #f8fafc; padding: 14px; border-radius: 10px; word-break: break-all; font-family: ui-monospace, monospace; font-size: 0.95rem; margin: 16px 0; }
+    button { background: #2563eb; color: #fff; border: 0; padding: 12px 20px; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; width: 100%; }
+    button:hover { background: #1d4ed8; }
+    .ok { color: #15803d; font-weight: 600; margin-top: 10px; display: none; }
+    .err { color: #dc2626; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>🎵 ยืนยันสิทธิ์ TikTok เรียบร้อยแล้ว</h1>
+    <div id="content">กำลังอ่านรหัสยืนยัน...</div>
+  </div>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    const error = params.get('error');
+    const errDesc = params.get('error_description');
+    const el = document.getElementById('content');
+
+    if (error) {
+      el.innerHTML = `<p class="err">❌ เชื่อมต่อไม่สำเร็จ: ${error} ${errDesc ? '(' + errDesc + ')' : ''}</p>`;
+    } else if (code) {
+      const cmd = `#เชื่อมต่อTikTok ${code}`;
+      el.innerHTML = `
+        <p>กดปุ่มด้านล่างเพื่อคัดลอกคำสั่ง แล้วนำไปวางส่งในกลุ่ม LINE <strong>IAM NEWS</strong> เพื่อบันทึก Token อัตโนมัติครับ:</p>
+        <div class="cmd" id="cmdText"></div>
+        <button id="copyBtn">📋 คัดลอกคำสั่งไปวางใน LINE</button>
+        <p class="ok" id="copiedMsg">✅ คัดลอกแล้ว! นำไปวางส่งในกลุ่ม LINE ได้เลยครับ</p>
+      `;
+      document.getElementById('cmdText').textContent = cmd;
+      document.getElementById('copyBtn').addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(cmd);
+          document.getElementById('copiedMsg').style.display = 'block';
+        } catch (e) {
+          alert('กรุณาคัดลอกข้อความในกล่องสีดำด้านบนด้วยตนเองครับ');
+        }
+      });
+    } else {
+      el.innerHTML = `<p>ไม่พบรหัส <code>code</code> ในลิงก์ กรุณาเริ่มต้นจากคำสั่ง <strong>#เชื่อมต่อTikTok</strong> ในกลุ่ม LINE ครับ</p>`;
+    }
+  </script>
+</body>
+</html>
